@@ -3,7 +3,7 @@
 </h1><br>
 
 
-This is the official implementation of the deepbet paper.
+This is the official implementation of the [deepbet paper](https://arxiv.org/abs/2308.07003).
 
 deepbet is a neural network based tool which achieves state-of-the-art results for brain extraction of T1w MR images 
 of healthy adults while taking ~1 second per image.
@@ -12,7 +12,7 @@ of healthy adults while taking ~1 second per image.
 After installation, there are three ways to use deepbet
 1. ```deepbet-gui``` runs the **Graphical User Interface (GUI)**
 
-![deepbet_gui_2x](https://github.com/codingfisch/deepbet/assets/55840648/b60a3bd2-bfdb-4358-b93f-d0b66b0939bf)
+![deepbet_gui_newest](https://github.com/wwu-mmll/deepbet/assets/55840648/7458ce57-95eb-4f55-bd9e-58aa101932b6)
 
 
 2. ```deepbet-cli``` runs the **Command Line Interface (CLI)**
@@ -27,24 +27,24 @@ from deepbet import run_bet
 input_paths = ['path/to/sub_1/t1.nii.gz', 'path/to/sub_2/t1.nii.gz']
 brain_paths = ['path/to/sub_1/brain.nii.gz', 'path/to/sub_2/brain.nii.gz']
 mask_paths = ['path/to/sub_1/mask.nii.gz', 'path/to/sub_2/mask.nii.gz']
-tiv_paths = ['path/to/sub_1/tiv.json', 'path/to/sub_2/tiv.json']
+tiv_paths = ['path/to/sub_1/tiv.csv', 'path/to/sub_2/tiv.csv']
 run_bet(input_paths, brain_paths, mask_paths, tiv_paths, threshold=.5, n_dilate=0, no_gpu=False)
 ```
 
 Besides the `input paths` and the output paths
 
-- `brain_paths`: Destination filepaths of input nifti files with brain extraction applied
-- `mask_paths`: Destination filepaths of brain mask nifti files
-- `tiv_paths`: Destination filepaths of .csv-files containing the total intracranial volume (TIV) in cm³
+- `brain_paths`: Destination filepaths of input nifti **files with brain extraction applied**
+- `mask_paths`: Destination filepaths of **brain mask nifti files**
+- `tiv_paths`: Destination filepaths of **.csv-files containing the total intracranial volume (TIV)** in cm³
     - Simpler than it sounds: TIV = Voxel volume * Number of 1-Voxels in brain mask
 
-you can adjust deepbet via
+you can additionally do
 
-- `threshold` (Fine adjustment): deepbet internally predicts values between 0 and 1 for each voxel and then includes each voxel which is above 0.5. 
+- **Fine adjustments** via `threshold`: deepbet internally predicts values between 0 and 1 for each voxel and then includes each voxel which is above 0.5. 
 You can change this threshold (e.g. to 0.1 to include more voxels).
-- `n_dilate` (Coarse adjustment): Enlarges/shrinks mask by successively adding/removing voxels adjacent to mask surface.
+- **Coarse adjustments** via `n_dilate`: Enlarges/shrinks mask by successively adding/removing voxels adjacent to mask surface.
 
-and 
+and choose if you want to **use GPU (NVIDIA and Apple M1/M2 support) for speedup**
 
 - `no_gpu`: deepbet automatically uses NVIDIA GPU or Apple M1/M2 if available. If you do not want that set no_gpu=True.
 
