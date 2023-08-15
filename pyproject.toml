@@ -1,0 +1,35 @@
+[tool.poetry]
+name = 'deepbet'
+version = '0.0.1'
+description = 'Fast brain extraction using neural networks'
+authors = ['codingfisch <l_fisc17@wwu.de>']
+license = 'MIT'
+readme = 'README.md'
+repository = 'https://github.com/wwu-mmll/deepbet'
+classifiers = [
+    'Programming Language :: Python :: 3',
+    'Operating System :: OS Independent',
+    'Intended Audience :: Science/Research'
+]
+include = ['data/models/*']
+
+
+[tool.poetry.dependencies]
+python = '^3.0'
+connected-components-3d = '*'
+fill_voids = '*'
+nibabel = '*'
+pandas = '*'
+# PyQt5 = '5.9.2'  # unfortunately pip installation of pyqt can result in errors
+torch = '*'
+tqdm = '*'
+
+
+[tool.poetry.scripts]
+deepbet-cli = 'deepbet.interfaces.cli:run_cli'
+deepbet-gui = 'deepbet.interfaces.gui:run_gui'
+
+
+[build-system]
+requires = ['poetry-core']
+build-backend = 'poetry.core.masonry.api'
