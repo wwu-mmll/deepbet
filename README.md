@@ -3,7 +3,7 @@
 </h1><br>
 
 
-This is the official implementation of the deepbet paper.
+This is the official implementation of the [deepbet paper](https://arxiv.org/abs/2308.07003).
 
 deepbet is a neural network based tool which achieves state-of-the-art results for brain extraction of T1w MR images 
 of healthy adults while taking ~1 second per image.
