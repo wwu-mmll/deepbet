@@ -1,2 +1,2 @@
-from .bet import run_deepbet, BrainExtractor
+from .bet import run_bet, BrainExtractor
 from .utils import load_model

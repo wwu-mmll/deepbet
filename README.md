@@ -22,13 +22,13 @@ After installation, there are three ways to use deepbet
 3. Run deepbet directly in Python
 
 ```python
-from deepbet import run_deepbet
+from deepbet import run_bet
 
 input_paths = ['path/to/sub_1/t1.nii.gz', 'path/to/sub_2/t1.nii.gz']
 brain_paths = ['path/to/sub_1/brain.nii.gz', 'path/to/sub_2/brain.nii.gz']
 mask_paths = ['path/to/sub_1/mask.nii.gz', 'path/to/sub_2/mask.nii.gz']
 tiv_paths = ['path/to/sub_1/tiv.json', 'path/to/sub_2/tiv.json']
-run_deepbet(input_paths, brain_paths, mask_paths, tiv_paths, threshold=.5, n_dilate=0, no_gpu=False)
+run_bet(input_paths, brain_paths, mask_paths, tiv_paths, threshold=.5, n_dilate=0, no_gpu=False)
 ```
 
 Besides the `input paths` and the output paths

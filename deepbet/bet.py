@@ -11,7 +11,7 @@ from deepbet.utils import dilate, normalize, load_model, apply_mask, reoriented_
 MODEL_PATH = f'{Path(__file__).parents[1].resolve()}/data/models'
 
 
-def run_deepbet(input_paths, brain_paths=None, mask_paths=None, tiv_paths=None, threshold=.5, n_dilate=0, no_gpu=False):
+def run_bet(input_paths, brain_paths=None, mask_paths=None, tiv_paths=None, threshold=.5, n_dilate=0, no_gpu=False):
     assert not (brain_paths is None and mask_paths is None and tiv_paths is None), 'No destination filepaths given'
     bet = BrainExtractor(use_gpu=not no_gpu)
     for i, in_path in tqdm(enumerate(input_paths), disable=len(input_paths) == 1, total=len(input_paths)):

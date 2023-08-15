@@ -73,6 +73,7 @@ class MainWindow(QMainWindow):
         self.threshold_textbox.setGeometry(QRect(530, 80, 100, 30))
         self.threshold_textbox.setDisabled(True)
         self.threshold_textbox.setText('0.5')
+        text = self.threshold_textbox.text()
 
         # Set up dilate textbox
         self.dilate_label = QLabel(self)
@@ -164,11 +165,15 @@ class MainWindow(QMainWindow):
                 self.run_button.setDisabled(False)
 
     def run_processing(self):
+        threshold = float(self.threshold_textbox.text())
+        n_dilate = int(self.dilate_textbox.text())
         bet = BrainExtractor(not self.no_gpu)
         for i, file in enumerate(self.input_files):
+            filename = str(Path(file).name).split('.')[0]
             brain_path = None if self.brain_dir is None else f'{self.brain_dir}/{Path(file).name}'
             mask_path = None if self.mask_dir is None else f'{self.mask_dir}/{Path(file).name}'
-            bet.run(file, brain_path=brain_path, mask_path=mask_path)
+            tiv_path = None if self.tiv_dir is None else f'{self.tiv_dir}/{filename}.csv'
+            bet.run(file, brain_path, mask_path, tiv_path, threshold, n_dilate)
             self.progress_bar.setValue(int(100 * (i + 1) / len(self.input_files)))
 
 

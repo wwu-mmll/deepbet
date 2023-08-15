@@ -4,7 +4,7 @@ import argparse
 import pandas as pd
 from pathlib import Path
 
-from deepbet.bet import run_deepbet
+from deepbet.bet import run_bet
 
 
 def run_cli():
@@ -39,7 +39,7 @@ def run_cli():
         masks_out = df.iloc[:, 2]
         tivs_out = df.iloc[:, 3]
 
-    run_deepbet(files_in, files_out, masks_out, tivs_out, args.threshold, args.n_dilate, args.no_gpu)
+    run_bet(files_in, files_out, masks_out, tivs_out, args.threshold, args.n_dilate, args.no_gpu)
 
 
 if __name__ == '__main__':
