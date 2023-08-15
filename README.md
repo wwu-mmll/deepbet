@@ -12,7 +12,7 @@ of healthy adults while taking ~1 second per image.
 After installation, there are three ways to use deepbet
 1. ```deepbet-gui``` runs the **Graphical User Interface (GUI)**
 
-![deepbet_gui_2x](https://github.com/codingfisch/deepbet/assets/55840648/b60a3bd2-bfdb-4358-b93f-d0b66b0939bf)
+![deepbet_gui_newest](https://github.com/wwu-mmll/deepbet/assets/55840648/7458ce57-95eb-4f55-bd9e-58aa101932b6)
 
 
 2. ```deepbet-cli``` runs the **Command Line Interface (CLI)**
