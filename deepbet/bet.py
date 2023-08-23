@@ -52,7 +52,7 @@ class BrainExtractor:
         low, high = x_small.quantile(.005), x_small.quantile(.995)
         with torch.no_grad():
             mask_small = self.bbox_model(normalize(x_small, low, high))
-        mask_small = keep_largest_connected_component(mask_small.cpu().numpy())
+        mask_small = keep_largest_connected_component((mask_small > .5).float().cpu().numpy())
         mask_small = torch.from_numpy(mask_small).to(next(self.model.parameters()).device)
         self.bbox = self.get_bbox_with_margin(mask_small, mask.shape, bbox_margin)
         x = F.interpolate(x[self.bbox][None, None], shape, mode='nearest-exact')[0, 0]
