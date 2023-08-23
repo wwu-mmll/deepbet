@@ -142,9 +142,6 @@ class MainWindow(QMainWindow):
                 self.brain_dir = dir_dialog.selectedFiles()[0]
                 self.brain_dir_textbox.setText(self.brain_dir)
                 self.run_button.setDisabled(False)
-                self.threshold_textbox.setDisabled(False)
-                self.dilate_textbox.setDisabled(False)
-                self.brain_dir_checkbox.setDisabled(False)
 
     def show_mask_dir_dialog(self, state):
         if state == Qt.Checked:
