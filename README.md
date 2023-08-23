@@ -1,5 +1,5 @@
 <h1 align="center">
-<img src='https://github.com/codingfisch/deepbet/assets/55840648/335ed5e9-10d9-49c0-a1b5-92f527ddf5df' width='700'>
+<img src='https://github.com/wwu-mmll/deepbet/assets/55840648/ceff1fcc-e14b-4938-8f03-2cb28712eec1' width='700'>
 </h1><br>
 
 
@@ -17,7 +17,7 @@ After installation, there are three ways to use deepbet
 
 2. ```deepbet-cli``` runs the **Command Line Interface (CLI)**
 
-![deepbet_cli](https://github.com/codingfisch/deepbet/assets/55840648/bf7cdb07-8ed0-4611-bfc3-79263a90a8ba)
+![deepbet_cli](https://github.com/wwu-mmll/deepbet/assets/55840648/5191cd9a-bada-4ff0-9f1b-3d499655a8f7)
 
 3. Run deepbet directly in Python
 
