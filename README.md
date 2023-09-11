@@ -59,7 +59,7 @@ If you find this code useful in your research, please consider citing:
 
     @inproceedings{deepbet,
     Author = {Lukas Fisch, Stefan Zumdick, Carlotta Barkhau, Daniel Emden, Jan Ernsting, Ramona Leenings, Kelvin Sarink, Nils R. Winter, Udo Dannlowski, Tim Hahn},
-    Title = {fastbet: Fast brain extraction of T1-weighted MRI using Convolutional Neural Networks},
+    Title = {deepbet: Fast brain extraction of T1-weighted MRI using Convolutional Neural Networks},
     Journal  = {Imaging Neuroscience},
     Year = {2023}
     }
