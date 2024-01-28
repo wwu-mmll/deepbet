@@ -1,4 +1,6 @@
-![niftiview_logo](https://github.com/wwu-mmll/deepbet/assets/55840648/c2566354-1537-446b-bdaa-8e330e7a14fb)
+<h1 align="center">
+<img src='https://github.com/wwu-mmll/deepbet/assets/55840648/ceff1fcc-e14b-4938-8f03-2cb28712eec1' width='700'>
+</h1><br>
 
 This is the official implementation of the [deepbet paper](https://arxiv.org/abs/2308.07003).
 
