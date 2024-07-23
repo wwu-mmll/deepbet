@@ -40,7 +40,6 @@ def run_cli():
         files_out = df.iloc[:, 1]
         masks_out = df.iloc[:, 2]
         tivs_out = df.iloc[:, 3]
-    print(files_in, files_out)
     run_bet(files_in, files_out, masks_out, tivs_out, args.threshold, args.n_dilate, args.no_gpu, args.skip_broken)
 
 
