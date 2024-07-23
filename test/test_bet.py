@@ -2,10 +2,9 @@ import torch
 import unittest
 import numpy as np
 import nibabel as nib
-from pathlib import Path
 
-from deepbet.bet import MODEL_PATH, BrainExtractor
-NIFTI_PATH = f'{Path(MODEL_PATH).parent}/niftis'
+from deepbet import BrainExtraction
+from deepbet.utils import DATA_PATH
 
 
 def dice_score(x1, x2):
@@ -14,13 +13,13 @@ def dice_score(x1, x2):
     return ((2. * inter) / union).mean()
 
 
-class TestBrainExtractor(unittest.TestCase):
+class TestBrainExtraction(unittest.TestCase):
     def test_run(self):
-        mask = nib.load(f'{NIFTI_PATH}/mask.nii.gz')
+        mask = nib.load(f'{DATA_PATH}/niftis/mask.nii.gz')
         x_mask = nib.as_closest_canonical(mask).get_fdata(dtype=np.float32)
 
-        bet = BrainExtractor(use_gpu=True)
-        img1, mask1, tiv1 = bet.run(f'{NIFTI_PATH}/t1w.nii.gz')
+        bet = BrainExtraction(no_gpu=False)
+        img1, mask1, tiv1 = bet.run(f'{DATA_PATH}/niftis/t1w.nii.gz')
 
         x_mask_pred = nib.as_closest_canonical(mask1).get_fdata(dtype=np.float32)
         dice = dice_score(x_mask, x_mask_pred)
@@ -29,12 +28,12 @@ class TestBrainExtractor(unittest.TestCase):
         self.assertTrue(dice > .9)
 
     def test_run_model(self):
-        img = nib.load(f'{NIFTI_PATH}/t1w.nii.gz')
+        img = nib.load(f'{DATA_PATH}/niftis/t1w.nii.gz')
         x = nib.as_closest_canonical(img).get_fdata(dtype=np.float32)
-        mask = nib.load(f'{NIFTI_PATH}/mask.nii.gz')
+        mask = nib.load(f'{DATA_PATH}/niftis/mask.nii.gz')
         x_mask = nib.as_closest_canonical(mask).get_fdata(dtype=np.float32)
 
-        bet = BrainExtractor(use_gpu=True)
+        bet = BrainExtraction(no_gpu=False)
         x_mask_pred = bet.run_model(x)
         x_mask_pred = (x_mask_pred > .5).astype(np.float32)
         dice = dice_score(x_mask, x_mask_pred)
@@ -43,7 +42,7 @@ class TestBrainExtractor(unittest.TestCase):
         self.assertTrue(dice > .9)
 
     def test_postprocess(self):
-        mask = nib.load(f'{NIFTI_PATH}/mask.nii.gz')
+        mask = nib.load(f'{DATA_PATH}/niftis/mask.nii.gz')
         x_mask = nib.as_closest_canonical(mask).get_fdata(dtype=np.float32)
         x_mask = (x_mask > .5).astype(np.float32)
 
@@ -53,7 +52,7 @@ class TestBrainExtractor(unittest.TestCase):
 
         x[0, 0, 0] = 1.
 
-        bet = BrainExtractor()
+        bet = BrainExtraction(no_gpu=False)
         bet.bbox = tuple([slice(0, s, 1) for s in x.shape])
         x_mask_pred = bet.postprocess(x)
 
@@ -70,7 +69,7 @@ class TestBrainExtractor(unittest.TestCase):
         bbox_bounds = [(factor * low - total_margin, factor * (low + cube_length) + total_margin) for low in lows]
         expected_bbox = tuple([slice(int(bb[0]), int(bb[1]), 1) for bb in bbox_bounds])
 
-        bet = BrainExtractor()
+        bet = BrainExtraction(no_gpu=False)
         bbox = bet.get_bbox_with_margin(x, shape=list(small_shape * factor), margin=margin)
 
         self.assertTrue(bbox == expected_bbox)
@@ -82,13 +81,13 @@ class TestBrainExtractor(unittest.TestCase):
 
         expected_center = torch.tensor([3.0, 3.5, 4.0])
         expected_size1 = torch.tensor([2, 1, 4])
-        center, size = BrainExtractor.get_bbox(x)
+        center, size = BrainExtraction.get_bbox(x)
 
         self.assertTrue(torch.all(torch.eq(center, expected_center)))
         self.assertTrue(torch.all(torch.eq(size, expected_size1)))
 
         expected_size2 = torch.tensor([4, 3, 6])
-        center, size = BrainExtractor.get_bbox(x, threshold=.001)
+        center, size = BrainExtraction.get_bbox(x, threshold=.001)
 
         self.assertTrue(torch.all(torch.eq(center, expected_center)))
         self.assertTrue(torch.all(torch.eq(size, expected_size2)))

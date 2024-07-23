@@ -2,10 +2,10 @@
 <img src='https://github.com/wwu-mmll/deepbet/assets/55840648/ceff1fcc-e14b-4938-8f03-2cb28712eec1' width='700'>
 </h1><br>
 
-This is the official implementation of the [deepbet paper](https://arxiv.org/abs/2308.07003).
+This is the official implementation of the [deepbet paper](https://www.sciencedirect.com/science/article/pii/S0010482524009302?dgcid=author).
 
-deepbet is a neural network based tool which achieves state-of-the-art results for brain extraction of T1w MR images 
-of healthy adults while taking ~1 second per image.
+deepbet is a neural network based tool, which achieves state-of-the-art results for brain extraction of T1w MR images 
+of healthy adults, while taking ~1 second per image.
 
 ## Usage
 After installation, there are three ways to use deepbet
@@ -16,7 +16,9 @@ After installation, there are three ways to use deepbet
 
 2. ```deepbet-cli``` runs the **Command Line Interface (CLI)**
 
-![deepbet_cli](https://github.com/wwu-mmll/deepbet/assets/55840648/5191cd9a-bada-4ff0-9f1b-3d499655a8f7)
+```bash
+deepbet-cli -i /path/to/inputs -o /path/to/output/brains
+```
 
 3. Run deepbet directly in Python
 
@@ -43,21 +45,35 @@ you can additionally do
 You can change this threshold (e.g. to 0.1 to include more voxels).
 - **Coarse adjustments** via `n_dilate`: Enlarges/shrinks mask by successively adding/removing voxels adjacent to mask surface.
 
-and choose if you want to **use GPU (NVIDIA and Apple M1/M2 support) for speedup**
+and choose if you want to **use GPU (only NVIDIA supported) for speedup**
 
-- `no_gpu`: deepbet automatically uses NVIDIA GPU or Apple M1/M2 if available. If you do not want that set no_gpu=True.
+- `no_gpu`: deepbet automatically uses the NVIDIA GPU if available. If you do not want that, set no_gpu=True.
 
 ## Installation
+For accelerated processing via GPU, it is recommended to first install PyTorch separately via a [command customized for your system](https://pytorch.org/get-started/locally/).
+
+Then the package itself can be installed via
 ```bash
 pip install deepbet
-conda install -c anaconda pyqt=5.15.7
+```
+Due to [this issue](https://github.com/ContinuumIO/anaconda-issues/issues/6833), the GUI can look ugly, which can be resolved via
+```bash
+conda install -c conda-forge tk=*=xft_*
 ```
 
 ## Citation
-If you find this code useful in your research, please consider citing:
+If you find this code useful in your research, please consider citing
 
-    @inproceedings{deepbet,
-    Author = {Lukas Fisch, Stefan Zumdick, Carlotta Barkhau, Daniel Emden, Jan Ernsting, Ramona Leenings, Kelvin Sarink, Nils R. Winter, Udo Dannlowski, Tim Hahn},
-    Title = {deepbet: Fast brain extraction of T1-weighted MRI using Convolutional Neural Networks},
-    Year = {2023}
-    }
+```bibtex
+@article{deepbet,
+    title = {deepbet: Fast brain extraction of T1-weighted MRI using Convolutional Neural Networks},
+    journal = {Computers in Biology and Medicine},
+    volume = {179},
+    pages = {108845},
+    year = {2024},
+    issn = {0010-4825},
+    doi = {https://doi.org/10.1016/j.compbiomed.2024.108845},
+    url = {https://www.sciencedirect.com/science/article/pii/S0010482524009302},
+    author = {Lukas Fisch and Stefan Zumdick and Carlotta Barkhau and Daniel Emden and Jan Ernsting and Ramona Leenings and Kelvin Sarink and Nils R. Winter and Benjamin Risse and Udo Dannlowski and Tim Hahn},
+}
+```

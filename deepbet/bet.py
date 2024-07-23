@@ -1,30 +1,40 @@
 import torch
+import warnings
 import fill_voids
 import numpy as np
 import pandas as pd
 import nibabel as nib
 from tqdm import tqdm
-from pathlib import Path
 import torch.nn.functional as F
 
-from deepbet.utils import dilate, normalize, load_model, apply_mask, reoriented_nifti, keep_largest_connected_component
-MODEL_PATH = f'{Path(__file__).parents[1].resolve()}/data/models'
+from deepbet.utils import (DATA_PATH, dilate, normalize, load_model, apply_mask, check_file, is_file_broken,
+                           reoriented_nifti, keep_largest_connected_component)
 
 
-def run_bet(input_paths, brain_paths=None, mask_paths=None, tiv_paths=None, threshold=.5, n_dilate=0, no_gpu=False):
+def run_bet(input_paths, brain_paths=None, mask_paths=None, tiv_paths=None, threshold=.5, n_dilate=0, no_gpu=False,
+            skip_broken=True, progress_bar_func=None, **kwargs):
     assert not (brain_paths is None and mask_paths is None and tiv_paths is None), 'No destination filepaths given'
-    bet = BrainExtractor(use_gpu=not no_gpu)
-    for i, in_path in tqdm(enumerate(input_paths), disable=len(input_paths) == 1, total=len(input_paths)):
-        brain_path = None if brain_paths is None else brain_paths[i]
-        mask_path = None if mask_paths is None else mask_paths[i]
-        tiv_path = None if tiv_paths is None else tiv_paths[i]
-        bet.run(in_path, brain_path, mask_path, tiv_path, threshold, n_dilate)
+    bet = BrainExtraction(no_gpu=no_gpu, **kwargs)
+    progress_bar = tqdm(enumerate(input_paths), disable=len(input_paths) == 1, total=len(input_paths))
+    for i, in_path in progress_bar:
+        if skip_broken and is_file_broken(in_path):
+            warnings.warn(f'Skipped file {in_path} (use "run_bet(..., skip_broken=False)" for error messages)', Warning)
+        else:
+            check_file(in_path)
+            brain_path = None if brain_paths is None else brain_paths[i]
+            mask_path = None if mask_paths is None else mask_paths[i]
+            tiv_path = None if tiv_paths is None else tiv_paths[i]
+            bet.run(in_path, brain_path, mask_path, tiv_path, threshold, n_dilate)
+            if progress_bar_func is not None:
+                progress_bar_func(progress_bar)
 
 
-class BrainExtractor:
-    def __init__(self, use_gpu=True):
-        self.model = load_model(f'{MODEL_PATH}/model.pt', use_gpu)
-        self.bbox_model = load_model(f'{MODEL_PATH}/bbox_model.pt', use_gpu)
+class BrainExtraction:
+    def __init__(self, no_gpu=False, model_path=None, bbox_model_path=None):
+        model_path = f'{DATA_PATH}/models/model.pt' if model_path is None else model_path
+        bbox_model_path = f'{DATA_PATH}/models/bbox_model.pt' if bbox_model_path is None else bbox_model_path
+        self.model = load_model(model_path, no_gpu)
+        self.bbox_model = load_model(bbox_model_path, no_gpu)
         self.bbox = None
 
     def run(self, input, brain_path=None, mask_path=None, tiv_path=None, threshold=.5, n_dilate=0):
@@ -51,13 +61,13 @@ class BrainExtractor:
         x_small = F.interpolate(x[None, None], small_shape, mode='nearest-exact')[0, 0]
         low, high = x_small.quantile(.005), x_small.quantile(.995)
         with torch.no_grad():
-            mask_small = self.bbox_model(normalize(x_small, low, high))
+            mask_small = self.bbox_model(normalize(x_small, low, high)[None, None])[0, 1]
         mask_small = keep_largest_connected_component((mask_small > .5).float().cpu().numpy())
         mask_small = torch.from_numpy(mask_small).to(next(self.model.parameters()).device)
         self.bbox = self.get_bbox_with_margin(mask_small, mask.shape, bbox_margin)
         x = F.interpolate(x[self.bbox][None, None], shape, mode='nearest-exact')[0, 0]
         with torch.no_grad():
-            mask_bbox = self.model(normalize(x, low, high))
+            mask_bbox = self.model(normalize(x, low, high)[None, None])[0, 1]
         mask[self.bbox] = F.interpolate(mask_bbox[None, None], mask[self.bbox].shape, mode='nearest-exact')[0, 0]
         return mask.cpu().numpy()
 
