@@ -1,6 +1,6 @@
 [tool.poetry]
 name = 'deepbet'
-version = '1.0.0'
+version = '1.0.1'
 description = 'Fast brain extraction using neural networks'
 authors = ['codingfisch <l_fisc17@wwu.de>']
 license = 'MIT'
