@@ -5,7 +5,7 @@ from functools import partial
 from tkinter import PhotoImage
 
 from deepbet import run_bet
-from deepbet.utils import DATA_PATH
+from deepbet.utils import DATA_PATH, FILETYPES
 
 
 class App(ctk.CTk):
@@ -61,11 +61,12 @@ class App(ctk.CTk):
     def set_input(self, event=None, is_pattern=False):
         if is_pattern:
             pattern = self.input_pattern_entry.get()
-            files = [fp for fp in sorted(glob.glob(pattern)) if fp.endswith(('.nii.gz', '.nii'))]
+            files = [fp for fp in sorted(glob.glob(pattern)) if fp.endswith(FILETYPES)]
             if len(files) == 0:
                 print(f'Found no files based on given pattern {pattern}')
         else:
-            files = ctk.filedialog.askopenfilenames(filetypes=[('Image Files', '*.nii *.nii.gz')])
+            type_string = '*' + ' *'.join(FILETYPES)
+            files = ctk.filedialog.askopenfilenames(filetypes=[('Image Files', type_string)])
         if files:
             self.input_files = files
             self.status_label.configure(text=f'Selected {len(files)} Input Files')
